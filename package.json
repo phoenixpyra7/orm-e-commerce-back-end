@@ -1,0 +1,32 @@
+{
+  "name": "module-13-challenge-orm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "launch": "npm install && npm run watch",
+    "prestart": "node config/init",
+    "start": "node server",
+    "preseed": "node config/init seed",
+    "seed": "node seeds/index",
+    "prewatch": "node config/init",
+    "watch": "nodemon server",
+    "postinstall": "cp ./.env.example ./.env"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@work.github.com:coding-boot-camp/module-13-challenge-orm.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.7"
+  }
+}
