@@ -3,20 +3,72 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
 
-// get all products
+// get all products // product declared but not defined? need fix
+// find all products
+// be sure to include its associated Category and Tag data
 router.get('/', async (req, res) => {
-  // find all products
-  // be sure to include its associated Category and Tag data
+  const products = await Product.findAll().catch((err) => {
+    res.status(500).json({
+      message: 'Error finding products',
+      error: err,
+      include: [Tag],
+    });
+  }).then((products) => {
+    products.forEach((product) => {
+    product.getTags().then((tags) => {
+    product.tags = tags;
+  });
+  res.json(products);
+  });
+    
+  })  
+  
 });
 
 // get one product
-router.get('/:id', async (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
+router.get('/:id', async (req, res) => {
+  const product = await Product.findByPk(req.params.id).catch((err) => {
+    res.status(500).json({
+      message: 'Error finding product',
+      error: err,
+      include: [Tag],
+    });
+  })
+    .then((product) => {
+      product.getTags().then((tags) => {
+        product.tags = tags;
+      });
+      res.json(product);
+    })
 });
 
 // create new product
 router.post('/', async (req, res) => {
+  req.body.price = req.body.price * 100
+  {
+    Product.create(req.body)
+      .then((product) => {
+        // if there's product tags, we need to create pairings to bulk create
+        if (req.body.tagIds.length) {
+          const productTagIdArr = req.body.tagIds.map((tag_id) => {
+            return {
+              product_id: product.id,
+              tag_id,
+            };
+          });
+          return ProductTag.bulkCreate(productTagIdArr);
+        }
+        // if no product tags, just respond
+        res.status(200).json(product);
+      })
+      .then((productTagIds) => res.status(200).json(productTagIds))
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json(err);
+      });
+  }
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -61,9 +113,17 @@ router.put('/:id', async (req, res) => {
     return res.status(500).json(err);
   }
 });
-
+// delete one product by its `id` value -- i am guessing i need to match product to the schema to define it?
 router.delete('/:id', async (req, res) => {
-  // delete one product by its `id` value
+    this.delete = await Product.destroy({
+      where: {
+        id: req.params.id
+      }
+    }).then((product) => {
+      res.json({
+        message: 'Product deleted',
+    })
+    })
 });
 
 module.exports = router;
