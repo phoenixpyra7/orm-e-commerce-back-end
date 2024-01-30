@@ -113,7 +113,7 @@ router.put('/:id', async (req, res) => {
     return res.status(500).json(err);
   }
 });
-// delete one product by its `id` value -- i am guessing i need to match product to the schema to define it?
+// delete one product by its `id` value -- i am guessing i need to match product to the schema to define
 router.delete('/:id', async (req, res) => {
     this.delete = await Product.destroy({
       where: {
