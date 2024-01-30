@@ -8,10 +8,14 @@ router.get('/', async (req, res) => {
   // be sure to include its associated Product data
 });
 
-router.get('/:id', async (req, res) => {
   // find a single tag by its `id`
   // be sure to include its associated Product data
-});
+router.get('/:id', async (req, res) => {
+  Tag.findByPk({include: [ID]})
+    res.json(err);
+  });
+  res.json(tagId);
+;
 
 router.post('/', async (req, res) => {
   // create a new tag
