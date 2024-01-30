@@ -4,7 +4,7 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 // The `/api/products` endpoint
 
 // find all products be sure to include its associated Category and Tag data
-// I used the async/await syntax for this block to practice
+// I used the .thn and .catch syntax for this block to practice
 router.get('/', async (req, res) => {
   Product.findAll({include: [Category,Tag]})
   .then(products => {
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 
 
 // find a single product by its `id`. be sure to include its associated Category and Tag data
-// I used the async/await syntax for this block to practice
+// I used the .then and .catch syntax for this block to practice
 router.get('/:id', async (req, res) => {
   Product.findByPk(req.params.id,{include: [Category, Tag]})
   .then(product => {
@@ -34,7 +34,7 @@ router.get('/:id', async (req, res) => {
     })
   });
 
-// create new product
+// This is to create new product
 router.post('/', async (req, res) => {
   req.body.price = req.body.price * 100
   {
@@ -104,41 +104,42 @@ router.put('/:id', async (req, res) => {
   }
 });
 // This is to delete one product by its `id` value // check if i did thhis correct
+// I used the async/await syntax for this block to practice.
 router.delete('/:id', async (req, res) => {
-  // async/await syntax  
-  // try {
-  //     const productData = await Product.destroy({
-  //       where: {
-  //         id: req.params.id
-  //       }
-  //     })
-
-  //     if (!productData) {
-  //       res.status(404).json({ message: 'No product found with this id!' });
-  //       return;  
-  //     }
-
-  //     res.status(200).json({ message: 'Product deleted' });
-  //   } catch (err) {
-  //     if (err) {
-  //       res.status(500).json(err);
-  //     }
-  //   }  
-  // promises based
-  Product.destroy({
-      where: {
-        id: req.params.id
-      }
-    }).then((product) => {
-      res.json({
-        message: 'Product deleted',
-      
+  try {
+      const productData = await Product.destroy({
+        where: {
+          id: req.params.id
+        }
       })
-      .catch((err) => {
-          console.log(err);
-          res.status(500).json(err);
-        })
-    })
+
+      if (!productData) {
+        res.status(404).json({ message: 'No product found with this id!' }); // if user messed up it's 404
+        return;  
+      }
+
+      res.status(200).json({ message: 'Product deleted' }); // 200 means all good
+    } catch (err) {
+      if (err) {
+        res.status(500).json(err); // if server messed up its a 500
+      }
+    }  
+
+//   // promise based .then and .catch syntax
+//   Product.destroy({
+//       where: {
+//         id: req.params.id
+//       }
+//     }).then((product) => {
+//       res.json({
+//         message: 'Product deleted',
+      
+//       })
+//       .catch((err) => {
+//           console.log(err);
+//           res.status(500).json(err);
+//         })
+//     })
 });
 
 module.exports = router;
