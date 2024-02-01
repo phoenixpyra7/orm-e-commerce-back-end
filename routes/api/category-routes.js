@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
 
 // find one category by its `id` value be sure to include its associated Products
 router.get("/:id", async (req, res) => {
-  Category.findOne(req.params.id, { include: [Product] })
+  Category.findByPk(req.params.id, { include: [Product] })
     .then((category) => {
       res.json(category);
     })
@@ -47,8 +47,6 @@ router.post("/", async (req, res) => {
 });
 
 
-
-
 // update a category by its `id` value
 router.put("/:id", async (req, res) => {
   Category.update(
@@ -57,7 +55,7 @@ router.put("/:id", async (req, res) => {
       where: {
         id: req.params.id,
       },
-    }
+    })
       .then((category) => {
         res.status(200).json(category);
       })
@@ -65,7 +63,6 @@ router.put("/:id", async (req, res) => {
         console.log(err);
         res.status(400).json(err);
       })
-  );
 });
 
 

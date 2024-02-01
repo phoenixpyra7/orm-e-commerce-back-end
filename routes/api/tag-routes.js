@@ -6,10 +6,9 @@ const { Tag, Product, ProductTag } = require('../../models');
 
  // find all tags be sure to include its associated Product data
 router.get('/', async (req, res) => {
-  Tag.findAll({include: [Model, Product, ProductTag]}) // double check if this is right
+  Tag.findAll({include: [{model: Product,through: ProductTag}]}) 
   .then(tags => {
-    res.status(200).json(tags)
-    res.json(tags) 
+    res.status(200).json(tags) 
   })
   .catch(err => {
     res.status(500).json({
@@ -22,7 +21,7 @@ router.get('/', async (req, res) => {
 
   // find a single tag by its `id` be sure to include its associated Product data
 router.get('/:id', async (req, res) => {
-  Tag.findOne({ where: {id: req.params.id},include: [Model, Product, ProductTag]}) // double check if this is right
+  Tag.findOne({ where: {id: req.params.id},include: [Product, ProductTag]}) // double check if this is right
   .then(tags => {
     res.status(200).json(tags)
     res.json(tags) 
